@@ -5,11 +5,11 @@ import pygame
 import numpy as np
 import random
 
-grid_height = 100
-grid_width = 100
+grid_height = 50
+grid_width = 50
 
-cell_width = 5
-cell_height = 5
+cell_width = 10
+cell_height = 10
 
 window_height = grid_height * cell_height
 window_width = grid_width * cell_width
