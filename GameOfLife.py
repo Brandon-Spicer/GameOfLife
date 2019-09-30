@@ -1,10 +1,19 @@
-"""
-Game of Life 01/03/2019
-"""
+'''
+GameOfLife.py
+Brandon Spicer
+01/03/2019
+
+A simple implementation of Conway's Game of Life on a toroid.
+
+09/11/2019: Deleted test code, cleaned up comments. 
+
+'''
+
 import pygame
 import numpy as np
 import random
 
+# set dimensions
 grid_height = 50
 grid_width = 50
 
@@ -14,23 +23,32 @@ cell_height = 10
 window_height = grid_height * cell_height
 window_width = grid_width * cell_width
 
-
+# initialize game grid
 grid = np.zeros((grid_height, grid_width))
 grid_next = np.zeros((grid_height, grid_width))
 
-# Colors
+# colors
 black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
 
-""" Select colors. """
-
+# set colors
 live_color = green
 dead_color = black
 
+# create cell object
 def cell(seed, n1, n2, n3, n4, n5, n6, n7, n8):
+	'''
+		accepts values of adjacent cells and a seed value
+		1 = alive
+		0 = dead
+		returns binary integer, which is the value for the 
+		cell in the next time step
+	'''
+
+	# define cell logic
     ps = seed
     ns = 0
     neighbors = n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8
@@ -48,11 +66,9 @@ def cell(seed, n1, n2, n3, n4, n5, n6, n7, n8):
     return ns
 
 
-""" Set up random grid """
-
+# create a random starting grid
 probability = 60
 isAlive = 0
-
 for x in range(grid_height):
     for y in range(grid_width):
         randInt = random.randint(0,100)
@@ -61,24 +77,10 @@ for x in range(grid_height):
         else:
             isAlive = 0
         grid[x][y] = isAlive        
+
 print(grid)        
 
-
-def glider(x, y):
-        grid[x][y]=1
-        grid[x+1][y]=1
-        grid[x+2][y]=1
-        grid[x+2][y+1]=1
-        grid[x+1][y+2]=1
-"""
-for x in range(grid_height-1):
-    for y in range(grid_width-1):
-        if x % 10 == 0:
-            if y % 10 == 0:
-                glider(x, y)
-
-"""
-
+# initialize pygame
 pygame.init()
 
 gameDisplay = pygame.display.set_mode((window_width, window_height))
@@ -86,18 +88,16 @@ pygame.display.set_caption('Game Of Life')
 
 clock = pygame.time.Clock()
 
-
-
 game = True
 
 while game:
     
-    """ Check for quit. """
+	# check for quit
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             game = False
     
-    """ Display the current grid pattern. """
+    # Display the current grid pattern 
     for x in range(grid_height):
         for y in range(grid_width):
             if grid[x][y] == 1:
@@ -106,11 +106,9 @@ while game:
                 pygame.draw.rect(gameDisplay, (dead_color), [y * cell_width, x * cell_height, cell_width, cell_height], 1)
     pygame.display.update()
     
-    """ 
-    Create next grid. 
-    """
+    # create next grid 
     
-    """ Top left corner. """
+    # top left corner 
     grid_next[0][0] = cell(
             
             grid[0][0], 
@@ -124,7 +122,7 @@ while game:
             grid[0][grid_width-1]
 
              )
-    """ Top Right Corner """
+    # top right corner 
     grid_next[0][grid_width-1] = cell(
             
             grid[0][grid_width-1],
@@ -137,7 +135,7 @@ while game:
             grid[1][grid_width-2],
             grid[0][grid_width-2])
 
-    """ Bottom Right Corner """
+    # bottom right corner 
     grid_next[grid_height-1][grid_width-1] = cell(
 
             grid[grid_height-1][grid_width-1],
@@ -150,7 +148,7 @@ while game:
             grid[0][grid_width-2],
             grid[grid_height-1][grid_width-2])
 
-    """ Bottom Left Corner """
+	# bottom left corner
     grid_next[grid_height-1][0] = cell(
 
             grid[grid_height-1][0],
@@ -163,7 +161,7 @@ while game:
             grid[0][grid_width-1],
             grid[grid_height-1][grid_width-1])
     
-    """ Left Edge """
+	# left edge
     for x in range(1, grid_height-1):
         grid_next[x][0] = cell(
 
@@ -177,7 +175,7 @@ while game:
             grid[x+1][grid_width-1],
             grid[x][grid_width-1])
 
-    """ Top Edge """
+	# top edge
     for y in range(1, grid_width-1):
         grid_next[0][y] = cell(
 
@@ -191,7 +189,7 @@ while game:
             grid[1][y-1],
             grid[0][y-1])
 
-    """ Right Edge """
+	# right edge
     for x in range(1, grid_height-1):
         grid_next[x][grid_width-1] = cell(
 
@@ -205,7 +203,7 @@ while game:
             grid[x+1][grid_width-2],
             grid[x][grid_width-2])
 
-    """ Bottom Edge """
+	# bottom edge
     for y in range(1, grid_width-1):
         grid_next[grid_height-1][y] = cell(
 
@@ -219,7 +217,7 @@ while game:
             grid[0][y-1],
             grid[grid_height-1][y-1])
 
-    """ Inner Region """
+	# inner region
     for i in range(1, grid_height-1):
         for j in range(1, grid_width-1):
             grid_next[i][j] = cell(
@@ -234,7 +232,7 @@ while game:
                 grid[i+1][j-1],
                 grid[i][j-1])
             
-    """ Update grid. """
+	# update grid
     for a in range(grid_height):
         for b in range(grid_width):
             grid[a][b] = grid_next[a][b]  
