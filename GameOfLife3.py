@@ -1,3 +1,12 @@
+'''
+Game of Life simmulator
+
+Creates random simmulations of Conway's Game of Life for exploratory data analysis
+02/09/2020
+Brandon Spicer
+
+''' 
+
 import time
 import random
 import arcade
