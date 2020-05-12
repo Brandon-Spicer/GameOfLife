@@ -1,3 +1,5 @@
+This is an old project. Check out my more recent cellular automata project here: https://github.com/ImanariRoll/cellular-automata
+
 # GameOfLife
 
 GameOfLife members:
